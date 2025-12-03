@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Five Queens Jewelry — Shop</title>
+  <meta name="description" content="Five Queens Jewelry — demo e‑commerce storefront with sales tracking and monthly best-seller report." />
+  <style>
+    /* ---------------- Reset & base ---------------- */
+    :root{
+      --accent:#b76e79; /* rose gold */
+      --muted:#6b6b6b;
+      --bg:#fffdfb;
+      --card:#ffffff;
+      --glass: rgba(255,255,255,0.6);
+      --shadow: 0 6px 18px rgba(16,24,40,0.08);
+      --radius:14px;
+      --max:1100px;
+      --gap:16px;
+      --nav-h:64px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(180deg,#fff 0%, #fffdfb 100%);color:#111}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{max-width:var(--max);margin:0 auto;padding:18px}
+
+    /* ---------------- Top nav ---------------- */
+    header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,0.9);backdrop-filter:blur(6px);box-shadow:var(--shadow)}
+    .nav{height:var(--nav-h);display:flex;align-items:center;gap:12px;padding:8px 18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700}
+    .brand .logo{width:44px;height:44px;background:linear-gradient(135deg,#ffd6e0,#b76e79);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px}
+    .search{flex:1;display:flex}
+    .search input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #eee}
+    .icons{display:flex;gap:8px;align-items:center}
+    .icon-btn{padding:8px;border-radius:10px;border:1px solid #eee;background:white}
+
+    /* ---------------- Layout ---------------- */
+    main{padding:18px}
+    .grid{display:grid;grid-template-columns:320px 1fr;gap:var(--gap)}
+    @media(max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .aside{order:2}
+    }
+
+    .aside{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+
+    /* product list */
+    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:1100px){.products{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.products{grid-template-columns:1fr}}
+
+    .product{border-radius:12px;overflow:hidden;border:1px solid #f0eaea;background:linear-gradient(180deg,rgba(255,255,255,0.6),#fff);}
+    .product .image{height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fff7f9);}
+    .product .body{padding:12px}
+    .product h4{margin:0 0 8px;font-size:16px}
+    .price{font-weight:700;color:var(--accent)}
+    .meta{font-size:13px;color:var(--muted)}
+    .btn{display:inline-block;padding:8px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
+
+    /* cart drawer */
+    .cart-drawer{position:fixed;right:18px;bottom:18px;width:360px;max-width:calc(100% - 36px);border-radius:14px;background:linear-gradient(180deg,#fff,#fffdfb);box-shadow:0 18px 40px rgba(10,10,10,0.12);padding:12px}
+    .cart-item{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed #f3eaea}
+
+    /* product modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal{background:var(--card);border-radius:12px;max-width:900px;width:100%;box-shadow:var(--shadow);display:flex;gap:12px;overflow:hidden}
+    .modal .left{flex:1;padding:18px}
+    .modal .right{width:320px;padding:18px}
+
+    /* admin/report */
+    .admin-row{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 10px;border-radius:999px;border:1px solid #eee;background:#fff}
+
+    /* footer */
+    footer{padding:30px;text-align:center;color:var(--muted)}
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .center{text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav container">
+      <div class="brand">
+        <div class="logo">FQ</div>
+        <div>
+          <div style="font-size:15px">Five Queens Jewelry</div>
+          <div style="font-size:12px;color:var(--muted)">Fine pieces • Metro Manila</div>
+        </div>
+      </div>
+
+      <div class="search">
+        <input id="searchInput" placeholder="Search jewelry, e.g. necklace, ring..." />
+      </div>
+
+      <div class="icons">
+        <div class="icon-btn" id="openAdmin">Admin</div>
+        <div class="icon-btn" id="openReport">Monthly Best</div>
+        <div class="icon-btn" id="openCartBtn">Cart (<span id="cartCount">0</span>)</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <aside class="aside">
+        <div class="card">
+          <h3>Categories</h3>
+          <div class="chip" data-cat="all">All</div>
+          <div class="chip" data-cat="rings">Rings</div>
+          <div class="chip" data-cat="necklaces">Necklaces</div>
+          <div class="chip" data-cat="earrings">Earrings</div>
+          <div class="chip" data-cat="bracelets">Bracelets</div>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <div class="card">
+          <h3>Cart Summary</h3>
+          <div id="cartSummary">No items yet.</div>
+          <div style="height:12px"></div>
+          <button class="btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+      </aside>
+
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2>Featured</h2>
+          <div class="muted">Mobile‑friendly • Demo store</div>
+        </div>
+
+        <div id="products" class="products"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- cart drawer (hidden on small screens until clicked) -->
+  <div id="cartDrawer" class="cart-drawer" style="display:none">
+    <h3>Cart</h3>
+    <div id="cartItems"></div>
+    <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+      <div><strong>Total:</strong> ₱<span id="cartTotal">0</span></div>
+      <div><button class="btn" id="buyNow">Buy Now</button></div>
+    </div>
+  </div>
+
+  <!-- modal for product quick view -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="left">
+        <div id="modalImage" style="height:340px;background:linear-gradient(180deg,#fff,#fff7f9);display:flex;align-items:center;justify-content:center">Image</div>
+      </div>
+      <div class="right">
+        <h3 id="modalTitle">Title</h3>
+        <div class="price" id="modalPrice">₱0</div>
+        <div class="meta" id="modalCategory">Category</div>
+        <p id="modalDesc" class="muted">Description</p>
+        <div style="height:12px"></div>
+        <div style="display:flex;gap:8px">
+          <input id="qty" type="number" value="1" min="1" style="width:70px;padding:8px;border-radius:8px;border:1px solid #eee" />
+          <button class="btn" id="addToCartBtn">Add to cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- admin modal -->
+  <div id="adminModal" class="modal-backdrop">
+    <div class="modal" style="max-width:900px;">
+      <div class="left" style="flex:1">
+        <h3>Admin — Record Sales</h3>
+        <p class="muted">Simulate orders and track monthly sales counts. This is a demo admin — data is stored locally in your browser (localStorage).</p>
+        <div style="height:12px"></div>
+        <label>Pick product</label>
+        <select id="adminProduct" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee"></select>
+        <div style="height:8px"></div>
+        <label>Quantity</label>
+        <input id="adminQty" type="number" value="1" min="1" style="width:120px;padding:8px;border-radius:8px;border:1px solid #eee" />
+        <div style="height:8px"></div>
+        <label>Month (YYYY-MM)</label>
+        <input id="adminMonth" type="month" style="padding:8px;border-radius:8px;border:1px solid #eee" />
+        <div style="height:10px"></div>
+        <button class="btn" id="recordSale">Record Sale</button>
+        <div style="height:12px"></div>
+        <h4>Recent simulated orders</h4>
+        <div id="adminOrders"></div>
+      </div>
+      <div class="right">
+        <h3>Tools</h3>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="chip" id="resetData">Reset All Data</button>
+          <button class="chip" id="exportData">Export JSON</button>
+          <div class="muted">Exported JSON contains products, orders and monthly sales counts.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- report modal -->
+  <div id="reportModal" class="modal-backdrop">
+    <div class="modal" style="max-width:900px;">
+      <div style="padding:18px;width:100%">
+        <h3>Monthly Best Sellers</h3>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+          <label>Choose month</label>
+          <input id="reportMonth" type="month" />
+        </div>
+        <div id="reportContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div style="font-weight:700">Five Queens Jewelry</div>
+      <div class="muted">Demo storefront — not connected to live payment gateways. Sales stored in browser for demo and reporting purposes.</div>
+    </div>
+  </footer>
+
+  <script>
+    /* ---------------- Demo products ---------------- */
+    const demoProducts = [
+      {id:'p1',title:'Royal Pearl Necklace',price:2599,cat:'necklaces',desc:'Freshwater pearl necklace with rose-gold plating.',img:'https://images.unsplash.com/photo-1619718713903-9c5b1b6eaf1c?auto=format&fit=crop&w=800&q=60'},
+      {id:'p2',title:'Queens Halo Ring',price:1899,cat:'rings',desc:'Cubic zirconia halo ring inspired by royal crowns.',img:'https://images.unsplash.com/photo-1547332175-0d6577b9a2f9?auto=format&fit=crop&w=800&q=60'},
+      {id:'p3',title:'Luxe Pearl Studs',price:799,cat:'earrings',desc:'Minimal pearl studs with secure backs.',img:'https://images.unsplash.com/photo-1576675785542-01d7158d9b9b?auto=format&fit=crop&w=800&q=60'},
+      {id:'p4',title:'Rose Gold Bangle',price:1299,cat:'bracelets',desc:'Slim bangle with hammered finish.',img:'https://images.unsplash.com/photo-1547394765-84b2b9f5c0b3?auto=format&fit=crop&w=800&q=60'},
+      {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'https://images.unsplash.com/photo-1520975698516-2a54b0f1c3d1?auto=format&fit=crop&w=800&q=60'},
+      {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'https://images.unsplash.com/photo-1549991439-5b0f6a3f8b4b?auto=format&fit=crop&w=800&q=60'},
+      {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'https://images.unsplash.com/photo-1519837552467-8f7a6a6e5ddb?auto=format&fit=crop&w=800&q=60'},
+      {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'https://images.unsplash.com/photo-1599681684530-9c9a2d9f99a4?auto=format&fit=crop&w=800&q=60'}n
+    ];
+
+    // fix: remove trailing 'n' accidentally
+    const products = demoProducts.map(p=>p.id ? p : null).filter(Boolean);
+
+    /* ---------------- Local storage keys ---------------- */
+    const KEY_PRODUCTS = 'fq_products_v1';
+    const KEY_ORDERS = 'fq_orders_v1';
+    const KEY_MONTH_SALES = 'fq_month_sales_v1';
+
+    /* ---------------- Utilities ---------------- */
+    function uid(len=8){return Math.random().toString(36).slice(2,2+len)}
+    function money(n){return Number(n).toLocaleString('en-PH')}
+
+    /* ---------------- Load / Init data ---------------- */
+    function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
+    function load(key,def){try{return JSON.parse(localStorage.getItem(key))||def}catch(e){return def}}
+
+    function initData(){
+      if(!localStorage.getItem(KEY_PRODUCTS)) save(KEY_PRODUCTS, demoProducts);
+      if(!localStorage.getItem(KEY_ORDERS)) save(KEY_ORDERS, []);
+      if(!localStorage.getItem(KEY_MONTH_SALES)) save(KEY_MONTH_SALES, {});
+    }
+
+    initData();
+    let dataProducts = load(KEY_PRODUCTS, demoProducts);
+    let orders = load(KEY_ORDERS, []);
+    let monthSales = load(KEY_MONTH_SALES, {}); // { '2025-11': {p1:10, p2:2} }
+
+    /* ---------------- Render products ---------------- */
+    const productsEl = document.getElementById('products');
+    const searchInput = document.getElementById('searchInput');
+
+    function renderProducts(filterCat='all',q=''){
+      productsEl.innerHTML = '';
+      const qlow = q.trim().toLowerCase();
+      const list = dataProducts.filter(p=>{
+        if(filterCat!=='all' && p.cat!==filterCat) return false;
+        if(qlow && !(p.title.toLowerCase().includes(qlow) || p.desc.toLowerCase().includes(qlow))) return false;
+        return true;
+      });
+      list.forEach(p=>{
+        const el = document.createElement('div');el.className='product card';
+        el.innerHTML = `
+          <div class="image"><img src="${p.img}" alt="${p.title}" style="max-height:200px;object-fit:cover"></div>
+          <div class="body">
+            <h4>${p.title}</h4>
+            <div class="meta">${p.cat} • ID ${p.id}</div>
+            <div style="height:8px"></div>
+            <div class="price">₱${money(p.price)}</div>
+            <div style="height:10px"></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" data-id="${p.id}" onclick="openModal('${p.id}')">Quick view</button>
+              <button class="chip" onclick="recordQuickSale('${p.id}',1)">Buy 1 (demo)</button>
+            </div>
+          </div>
+        `;
+        productsEl.appendChild(el);
+      })
+    }
+
+    // initial render
+    renderProducts();
+
+    // category chips
+    document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',e=>{
+      const cat = ch.dataset.cat;
+      renderProducts(cat, searchInput.value);
+    }))
+
+    // search
+    searchInput.addEventListener('input',e=>renderProducts('all', e.target.value));
+
+    /* ---------------- Modal handling ---------------- */
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalImage = document.getElementById('modalImage');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+
+    let currentModalProduct = null;
+    function openModal(id){
+      const p = dataProducts.find(x=>x.id===id);
+      if(!p) return;
+      currentModalProduct = p;
+      modalTitle.textContent = p.title;
+      modalPrice.textContent = '₱' + money(p.price);
+      modalDesc.textContent = p.desc;
+      modalCategory.textContent = p.cat;
+      modalImage.innerHTML = `<img src="${p.img}" alt="${p.title}" style="max-height:320px;object-fit:cover">`;
+      modalBackdrop.style.display = 'flex';
+    }
+    modalBackdrop.addEventListener('click',e=>{ if(e.target===modalBackdrop) modalBackdrop.style.display='none'})
+
+    /* ---------------- Cart logic ---------------- */
+    let cart = load('fq_cart_demo_v1', {}); // {p1:{qty:2}}
+    const cartCount = document.getElementById('cartCount');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const cartSummary = document.getElementById('cartSummary');
+
+    function saveCart(){localStorage.setItem('fq_cart_demo_v1', JSON.stringify(cart)); updateCartUI();}
+    function updateCartUI(){
+      const keys = Object.keys(cart);
+      let total = 0; let count=0;
+      cartItems.innerHTML='';
+      keys.forEach(id=>{
+        const p = dataProducts.find(x=>x.id===id);
+        const qty = cart[id].qty;
+        const el = document.createElement('div');el.className='cart-item';
+        el.innerHTML = `<div style="width:56px;height:56px;overflow:hidden;border-radius:10px"><img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
+          <div style="flex:1"><div style="font-weight:600">${p.title}</div><div class="muted">₱${money(p.price)} • x ${qty}</div></div>
+          <div><button class="chip" onclick="changeQty('${id}',-1)">-</button><button class="chip" onclick="changeQty('${id}',1)">+</button></div>`;
+        cartItems.appendChild(el);
+        total += p.price * qty; count += qty;
+      })
+      cartCount.textContent = count;
+      cartTotalEl.textContent = money(total);
+      cartSummary.innerHTML = keys.length ? `${count} items • ₱${money(total)}` : 'No items yet.';
+    }
+
+    function changeQty(id,delta){
+      if(!cart[id]) return;
+      cart[id].qty += delta;
+      if(cart[id].qty<=0) delete cart[id];
+      saveCart();
+    }
+
+    addToCartBtn.addEventListener('click',()=>{
+      const qty = Number(document.getElementById('qty').value) || 1;
+      addCart(currentModalProduct.id, qty);
+      modalBackdrop.style.display='none';
+    })
+
+    function addCart(id,qty=1){
+      cart[id] = cart[id] || {qty:0};
+      cart[id].qty += qty;
+      saveCart();
+      // small toast
+      alert('Added to cart');
+    }
+
+    window.openCart = function(){cartDrawer.style.display = cartDrawer.style.display === 'none' ? 'block' : 'none'}
+    document.getElementById('openCartBtn').addEventListener('click', openCart);
+
+    // quick buy used in product card
+    window.recordQuickSale = function(id,q){
+      // record a simulated order in current month
+      const today = new Date();
+      const monthKey = today.toISOString().slice(0,7);
+      monthSales[monthKey] = monthSales[monthKey] || {};
+      monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + q;
+      orders.push({id:uid(6),productId:id,qty:q,month:monthKey,created:new Date().toISOString()});
+      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
+      alert('Demo purchase recorded for ' + monthKey);
+    }
+
+    // buy now -> converts cart to order (demo)
+    document.getElementById('buyNow').addEventListener('click',()=>{
+      const keys = Object.keys(cart); if(!keys.length){alert('Cart empty');return}
+      const today = new Date(); const monthKey = today.toISOString().slice(0,7);
+      // add to monthSales
+      keys.forEach(id=>{
+        monthSales[monthKey] = monthSales[monthKey] || {};
+        monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + cart[id].qty;
+        orders.push({id:uid(6),productId:id,qty:cart[id].qty,month:monthKey,created:new Date().toISOString()});
+      })
+      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
+      cart = {}; saveCart(); cartDrawer.style.display='none';
+      alert('Thank you! Demo order placed for ' + monthKey);
+    })
+
+    // checkout button in aside opens cart
+    document.getElementById('checkoutBtn').addEventListener('click',()=>{openCart(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})})
+
+    // init cart UI
+    updateCartUI();
+
+    /* ---------------- Admin UI ---------------- */
+    const adminModal = document.getElementById('adminModal');
+    const openAdmin = document.getElementById('openAdmin');
+    const adminProduct = document.getElementById('adminProduct');
+    const recordSaleBtn = document.getElementById('recordSale');
+    const adminOrders = document.getElementById('adminOrders');
+
+    function refreshAdminProducts(){
+      adminProduct.innerHTML = '';
+      dataProducts.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=`${p.title} (₱${money(p.price)})`;adminProduct.appendChild(o)})
+    }
+    refreshAdminProducts();
+
+    openAdmin.addEventListener('click',()=>{adminModal.style.display='flex'; renderAdminOrders(); document.getElementById('adminMonth').value = new Date().toISOString().slice(0,7)})
+    adminModal.addEventListener('click',e=>{ if(e.target===adminModal) adminModal.style.display='none'})
+
+    recordSaleBtn.addEventListener('click',()=>{
+      const id = adminProduct.value; const qty = Number(document.getElementById('adminQty').value)||1; const month = document.getElementById('adminMonth').value;
+      if(!month){alert('Pick month');return}
+      monthSales[month] = monthSales[month] || {};
+      monthSales[month][id] = (monthSales[month][id]||0) + qty;
+      orders.push({id:uid(6),productId:id,qty:qty,month:month,created:new Date().toISOString()});
+      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
+      renderAdminOrders(); alert('Recorded');
+    })
+
+    function renderAdminOrders(){
+      adminOrders.innerHTML = '';
+      const recent = orders.slice(-10).reverse();
+      recent.forEach(o=>{
+        const p = dataProducts.find(x=>x.id===o.productId)||{title:o.productId};
+        const d = document.createElement('div'); d.className='muted'; d.style.padding='6px 0'; d.textContent = `${o.created.split('T')[0]} — ${p.title} x ${o.qty} (${o.month})`;
+        adminOrders.appendChild(d);
+      })
+    }
+
+    document.getElementById('resetData').addEventListener('click',()=>{
+      if(confirm('Reset demo data? This clears orders and sales counts, but not products.')){
+        orders=[]; monthSales={}; save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); renderAdminOrders(); alert('Reset');
+      }
+    })
+
+    document.getElementById('exportData').addEventListener('click',()=>{
+      const blob = new Blob([JSON.stringify({products:dataProducts,orders:orders,monthSales:monthSales},null,2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='five-queens-data.json'; a.click(); URL.revokeObjectURL(url);
+    })
+
+    /* ---------------- Reporting (best seller per month) ---------------- */
+    const reportModal = document.getElementById('reportModal');
+    const openReport = document.getElementById('openReport');
+    const reportMonth = document.getElementById('reportMonth');
+    const reportContent = document.getElementById('reportContent');
+
+    openReport.addEventListener('click',()=>{reportModal.style.display='flex'; reportMonth.value = new Date().toISOString().slice(0,7); renderReport();})
+    reportModal.addEventListener('click',e=>{ if(e.target===reportModal) reportModal.style.display='none'})
+
+    reportMonth.addEventListener('change',renderReport);
+
+    function renderReport(){
+      const m = reportMonth.value || new Date().toISOString().slice(0,7);
+      const sales = monthSales[m] || {};
+      if(!Object.keys(sales||{}).length){reportContent.innerHTML = `<div class="muted">No sales recorded for ${m}.</div>`; return}
+      // compute top products
+      const arr = Object.entries(sales).map(([pid,c])=>({pid,count:c}));
+      arr.sort((a,b)=>b.count - a.count);
+      const top = arr[0];
+      const ptop = dataProducts.find(x=>x.id===top.pid);
+      let html = `<div style="display:flex;gap:12px;align-items:center"><div style="width:120px;height:120px;border-radius:12px;overflow:hidden"><img src="${ptop.img}" style="width:100%;height:100%;object-fit:cover"/></div><div><h3>${ptop.title}</h3><div class="muted">Sold ${top.count} pcs in ${m}</div><div style="height:8px"></div><div class="muted">Category: ${ptop.cat}</div></div></div>`;
+      // also show top 5
+      html += `<div style="margin-top:12px"><h4>Top sellers</h4><ol>` + arr.slice(0,5).map(a=>{const p=dataProducts.find(x=>x.id===a.pid); return `<li>${p.title} — ${a.count} pcs`}).join('') + `</ol></div>`;
+      reportContent.innerHTML = html;
+    }
+
+    /* ---------------- Small fixes & load persisted data ---------------- */
+    // load persisted monthSales and orders from localStorage (already assigned above)
+    function loadEverything(){
+      dataProducts = load(KEY_PRODUCTS, demoProducts);
+      orders = load(KEY_ORDERS, []);
+      monthSales = load(KEY_MONTH_SALES, {});
+      refreshAdminProducts(); renderProducts(); updateCartUI();
+    }
+    loadEverything();
+
+    // fix accidental stray character in demoProducts earlier: if any product id missing remove
+    dataProducts = dataProducts.filter(p=>p && p.id);
+    save(KEY_PRODUCTS, dataProducts);
+
+    /* ---------------- On first open show short tip ---------------- */
+    if(!localStorage.getItem('fq_seen_tip')){
+      localStorage.setItem('fq_seen_tip','1');
+      setTimeout(()=>alert('Tip: Use Admin → Record Sales to simulate orders per month. Then use Monthly Best to view that month\'s best seller.'),600);
+    }
+
+  </script>
+</body>
+</html>
