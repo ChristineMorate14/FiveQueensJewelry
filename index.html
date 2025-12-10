@@ -1,512 +1,359 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Five Queens Jewelry — Shop</title>
-  <meta name="description" content="Five Queens Jewelry — demo e‑commerce storefront with sales tracking and monthly best-seller report." />
-  <style>
-    /* ---------------- Reset & base ---------------- */
-    :root{
-      --accent:#b76e79; /* rose gold */
-      --muted:#6b6b6b;
-      --bg:#fffdfb;
-      --card:#ffffff;
-      --glass: rgba(255,255,255,0.6);
-      --shadow: 0 6px 18px rgba(16,24,40,0.08);
-      --radius:14px;
-      --max:1100px;
-      --gap:16px;
-      --nav-h:64px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
-    body{background:linear-gradient(180deg,#fff 0%, #fffdfb 100%);color:#111}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-    .container{max-width:var(--max);margin:0 auto;padding:18px}
-
-    /* ---------------- Top nav ---------------- */
-    header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,0.9);backdrop-filter:blur(6px);box-shadow:var(--shadow)}
-    .nav{height:var(--nav-h);display:flex;align-items:center;gap:12px;padding:8px 18px}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:700}
-    .brand .logo{width:44px;height:44px;background:linear-gradient(135deg,#ffd6e0,#b76e79);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:18px}
-    .search{flex:1;display:flex}
-    .search input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #eee}
-    .icons{display:flex;gap:8px;align-items:center}
-    .icon-btn{padding:8px;border-radius:10px;border:1px solid #eee;background:white}
-
-    /* ---------------- Layout ---------------- */
-    main{padding:18px}
-    .grid{display:grid;grid-template-columns:320px 1fr;gap:var(--gap)}
-    @media(max-width:900px){
-      .grid{grid-template-columns:1fr}
-      .aside{order:2}
-    }
-
-    .aside{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-
-    /* product list */
-    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    @media(max-width:1100px){.products{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:600px){.products{grid-template-columns:1fr}}
-
-    .product{border-radius:12px;overflow:hidden;border:1px solid #f0eaea;background:linear-gradient(180deg,rgba(255,255,255,0.6),#fff);}
-    .product .image{height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fff7f9);}
-    .product .body{padding:12px}
-    .product h4{margin:0 0 8px;font-size:16px}
-    .price{font-weight:700;color:var(--accent)}
-    .meta{font-size:13px;color:var(--muted)}
-    .btn{display:inline-block;padding:8px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
-
-    /* cart drawer */
-    .cart-drawer{position:fixed;right:18px;bottom:18px;width:360px;max-width:calc(100% - 36px);border-radius:14px;background:linear-gradient(180deg,#fff,#fffdfb);box-shadow:0 18px 40px rgba(10,10,10,0.12);padding:12px}
-    .cart-item{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed #f3eaea}
-
-    /* product modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px}
-    .modal{background:var(--card);border-radius:12px;max-width:900px;width:100%;box-shadow:var(--shadow);display:flex;gap:12px;overflow:hidden}
-    .modal .left{flex:1;padding:18px}
-    .modal .right{width:320px;padding:18px}
-
-    /* admin/report */
-    .admin-row{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:8px 10px;border-radius:999px;border:1px solid #eee;background:#fff}
-
-    /* footer */
-    footer{padding:30px;text-align:center;color:var(--muted)}
-
-    /* small helpers */
-    .muted{color:var(--muted)}
-    .center{text-align:center}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Five Queens Jewelry — Shop</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<style>
+  :root{--accent:#b76e79;--muted:#666;--bg:#fffdfb}
+  *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#fff 0%,#fffdfb 100%);color:#111}
+  .container{max-width:1100px;margin:0 auto;padding:16px}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#ffd6e0,#b76e79);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+  .search input{padding:10px;border-radius:10px;border:1px solid #eee;width:420px}
+  .icons{display:flex;gap:8px}
+  .btn{padding:8px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
+  .chip{padding:8px 10px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer}
+  .grid{display:grid;grid-template-columns:280px 1fr;gap:16px;margin-top:18px}
+  .card{background:#fff;border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+  .products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.search input{width:100%}.products{grid-template-columns:repeat(2,1fr)}}
+  .product{border-radius:12px;overflow:hidden;border:1px solid #f3e3e8;background:linear-gradient(180deg,#fff,#fff7f9);padding:12px}
+  .product img{width:100%;height:180px;object-fit:cover;border-radius:8px}
+  .muted{color:var(--muted)}
+  footer{padding:24px;text-align:center;color:var(--muted)}
+  .hidden{display:none}
+  .cart-modal{position:fixed;right:20px;bottom:20px;width:360px;background:white;padding:12px;border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,0.12)}
+</style>
 </head>
 <body>
-  <header>
-    <div class="nav container">
+  <div class="container">
+    <header>
       <div class="brand">
         <div class="logo">FQ</div>
         <div>
-          <div style="font-size:15px">Five Queens Jewelry</div>
-          <div style="font-size:12px;color:var(--muted)">Fine pieces • Metro Manila</div>
+          <div style="font-weight:700">Five Queens Jewelry</div>
+          <div style="font-size:12px" class="muted">Shop like Shopee / Lazada / Amazon</div>
         </div>
       </div>
 
       <div class="search">
-        <input id="searchInput" placeholder="Search jewelry, e.g. necklace, ring..." />
+        <input id="searchInput" placeholder="Search products, e.g. ring, necklace..." />
       </div>
 
       <div class="icons">
-        <div class="icon-btn" id="openAdmin">Admin</div>
-        <div class="icon-btn" id="openReport">Monthly Best</div>
-        <div class="icon-btn" id="openCartBtn">Cart (<span id="cartCount">0</span>)</div>
+        <div id="authArea"></div>
+        <button class="chip" id="openCartBtn">Cart (<span id="cartCount">0</span>)</button>
+        <button class="chip" id="openAdminBtn">Admin</button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="container">
     <div class="grid">
-      <aside class="aside">
-        <div class="card">
-          <h3>Categories</h3>
-          <div class="chip" data-cat="all">All</div>
-          <div class="chip" data-cat="rings">Rings</div>
-          <div class="chip" data-cat="necklaces">Necklaces</div>
-          <div class="chip" data-cat="earrings">Earrings</div>
-          <div class="chip" data-cat="bracelets">Bracelets</div>
+      <aside class="card">
+        <h3>Categories</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+          <button class="chip cat" data-cat="all">All</button>
+          <button class="chip cat" data-cat="rings">Rings</button>
+          <button class="chip cat" data-cat="necklaces">Necklaces</button>
+          <button class="chip cat" data-cat="earrings">Earrings</button>
+          <button class="chip cat" data-cat="bracelets">Bracelets</button>
         </div>
-
-        <div style="height:16px"></div>
-
-        <div class="card">
-          <h3>Cart Summary</h3>
-          <div id="cartSummary">No items yet.</div>
-          <div style="height:12px"></div>
-          <button class="btn" id="checkoutBtn">Proceed to Checkout</button>
-        </div>
+        <div style="height:12px"></div>
+        <div id="profileSummary" class="muted">Not logged in.</div>
       </aside>
 
       <section>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <h2>Featured</h2>
-          <div class="muted">Mobile‑friendly • Demo store</div>
+          <h2>Products</h2>
+          <div class="muted" id="resultsInfo"></div>
         </div>
 
         <div id="products" class="products"></div>
       </section>
     </div>
-  </main>
 
-  <!-- cart drawer (hidden on small screens until clicked) -->
-  <div id="cartDrawer" class="cart-drawer" style="display:none">
-    <h3>Cart</h3>
-    <div id="cartItems"></div>
-    <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
-      <div><strong>Total:</strong> ₱<span id="cartTotal">0</span></div>
-      <div><button class="btn" id="buyNow">Buy Now</button></div>
-    </div>
-  </div>
+    <div id="userOrdersSection" style="margin-top:18px"></div>
 
-  <!-- modal for product quick view -->
-  <div id="modalBackdrop" class="modal-backdrop">
-    <div class="modal">
-      <div class="left">
-        <div id="modalImage" style="height:340px;background:linear-gradient(180deg,#fff,#fff7f9);display:flex;align-items:center;justify-content:center">Image</div>
-      </div>
-      <div class="right">
-        <h3 id="modalTitle">Title</h3>
-        <div class="price" id="modalPrice">₱0</div>
-        <div class="meta" id="modalCategory">Category</div>
-        <p id="modalDesc" class="muted">Description</p>
-        <div style="height:12px"></div>
-        <div style="display:flex;gap:8px">
-          <input id="qty" type="number" value="1" min="1" style="width:70px;padding:8px;border-radius:8px;border:1px solid #eee" />
-          <button class="btn" id="addToCartBtn">Add to cart</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- admin modal -->
-  <div id="adminModal" class="modal-backdrop">
-    <div class="modal" style="max-width:900px;">
-      <div class="left" style="flex:1">
-        <h3>Admin — Record Sales</h3>
-        <p class="muted">Simulate orders and track monthly sales counts. This is a demo admin — data is stored locally in your browser (localStorage).</p>
-        <div style="height:12px"></div>
-        <label>Pick product</label>
-        <select id="adminProduct" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee"></select>
-        <div style="height:8px"></div>
-        <label>Quantity</label>
-        <input id="adminQty" type="number" value="1" min="1" style="width:120px;padding:8px;border-radius:8px;border:1px solid #eee" />
-        <div style="height:8px"></div>
-        <label>Month (YYYY-MM)</label>
-        <input id="adminMonth" type="month" style="padding:8px;border-radius:8px;border:1px solid #eee" />
-        <div style="height:10px"></div>
-        <button class="btn" id="recordSale">Record Sale</button>
-        <div style="height:12px"></div>
-        <h4>Recent simulated orders</h4>
-        <div id="adminOrders"></div>
-      </div>
-      <div class="right">
-        <h3>Tools</h3>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="chip" id="resetData">Reset All Data</button>
-          <button class="chip" id="exportData">Export JSON</button>
-          <div class="muted">Exported JSON contains products, orders and monthly sales counts.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- report modal -->
-  <div id="reportModal" class="modal-backdrop">
-    <div class="modal" style="max-width:900px;">
-      <div style="padding:18px;width:100%">
-        <h3>Monthly Best Sellers</h3>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-          <label>Choose month</label>
-          <input id="reportMonth" type="month" />
-        </div>
-        <div id="reportContent"></div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="container">
+    <footer>
       <div style="font-weight:700">Five Queens Jewelry</div>
-      <div class="muted">Demo storefront — not connected to live payment gateways. Sales stored in browser for demo and reporting purposes.</div>
+      <div class="muted">Demo shop — Netlify + Supabase (serverless)</div>
+    </footer>
+  </div>
+
+  <!-- Cart modal -->
+  <div id="cartModal" class="cart-modal hidden">
+    <h4>Cart</h4>
+    <div id="cartItems"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <strong>Total: ₱<span id="cartTotal">0</span></strong>
+      <button class="btn" id="checkoutBtn">Checkout</button>
     </div>
-  </footer>
+  </div>
 
-  <script>
-    /* ---------------- Demo products ---------------- */
-    const demoProducts = [
-      {id:'p1',title:'Royal Pearl Necklace',price:2599,cat:'necklaces',desc:'Freshwater pearl necklace with rose-gold plating.',img:'https://images.unsplash.com/photo-1619718713903-9c5b1b6eaf1c?auto=format&fit=crop&w=800&q=60'},
-      {id:'p2',title:'Queens Halo Ring',price:1899,cat:'rings',desc:'Cubic zirconia halo ring inspired by royal crowns.',img:'https://images.unsplash.com/photo-1547332175-0d6577b9a2f9?auto=format&fit=crop&w=800&q=60'},
-      {id:'p3',title:'Luxe Pearl Studs',price:799,cat:'earrings',desc:'Minimal pearl studs with secure backs.',img:'https://images.unsplash.com/photo-1576675785542-01d7158d9b9b?auto=format&fit=crop&w=800&q=60'},
-      {id:'p4',title:'Rose Gold Bangle',price:1299,cat:'bracelets',desc:'Slim bangle with hammered finish.',img:'https://images.unsplash.com/photo-1547394765-84b2b9f5c0b3?auto=format&fit=crop&w=800&q=60'},
-      {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'https://images.unsplash.com/photo-1520975698516-2a54b0f1c3d1?auto=format&fit=crop&w=800&q=60'},
-      {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'https://images.unsplash.com/photo-1549991439-5b0f6a3f8b4b?auto=format&fit=crop&w=800&q=60'},
-      {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'https://images.unsplash.com/photo-1519837552467-8f7a6a6e5ddb?auto=format&fit=crop&w=800&q=60'},
-      {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'https://images.unsplash.com/photo-1599681684530-9c9a2d9f99a4?auto=format&fit=crop&w=800&q=60'}n
-    ];
+  <!-- Login/Register modal -->
+  <div id="authModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center">
+    <div style="width:760px;background:white;border-radius:12px;padding:18px;display:flex;gap:12px">
+      <div style="flex:1">
+        <h4>Register</h4>
+        <label>Full name</label>
+        <input id="regName" />
+        <label>Email</label><input id="regEmail" type="email" />
+        <label>Password</label><input id="regPass" type="password" />
+        <label>Phone</label><input id="regPhone" />
+        <label>Address</label><textarea id="regAddress" rows="2"></textarea>
+        <div style="height:8px"></div>
+        <button class="btn" id="doRegister">Create account</button>
+      </div>
+      <div style="flex:1">
+        <h4>Login</h4>
+        <label>Email</label><input id="loginEmail" type="email" />
+        <label>Password</label><input id="loginPass" type="password" />
+        <div style="height:8px"></div>
+        <button class="btn" id="doLogin">Login</button>
+      </div>
+    </div>
+  </div>
 
-    // fix: remove trailing 'n' accidentally
-    const products = demoProducts.map(p=>p.id ? p : null).filter(Boolean);
+  <!-- Checkout modal -->
+  <div id="checkoutModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center">
+    <div style="width:720px;background:white;border-radius:12px;padding:18px">
+      <h4>Checkout</h4>
+      <div id="checkoutItems"></div>
+      <div style="height:8px"></div>
+      <label>Shipping address</label>
+      <textarea id="checkoutAddress" rows="2"></textarea>
+      <label>Phone</label>
+      <input id="checkoutPhone" />
+      <label>Payment method</label>
+      <select id="paymentMethod">
+        <option value="cod">Cash on Delivery</option>
+        <option value="gcash">GCash (manual)</option>
+        <option value="stripe">Credit Card (Stripe)</option>
+        <option value="paypal">PayPal</option>
+      </select>
+      <div style="height:12px;display:flex;gap:8px;justify-content:flex-end">
+        <button class="chip" id="cancelCheckout">Cancel</button>
+        <button class="btn" id="confirmCheckout">Confirm & Pay</button>
+      </div>
+    </div>
+  </div>
 
-    /* ---------------- Local storage keys ---------------- */
-    const KEY_PRODUCTS = 'fq_products_v1';
-    const KEY_ORDERS = 'fq_orders_v1';
-    const KEY_MONTH_SALES = 'fq_month_sales_v1';
+<script type="module">
+/*
+  SPA frontend:
+  - Uses Supabase JS for auth on client
+  - Uses Netlify Functions as '/.netlify/functions/*' for DB interactions and order creation
+  - For simplicity in this starter, we assume the functions are available in the same repo.
+*/
 
-    /* ---------------- Utilities ---------------- */
-    function uid(len=8){return Math.random().toString(36).slice(2,2+len)}
-    function money(n){return Number(n).toLocaleString('en-PH')}
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    /* ---------------- Load / Init data ---------------- */
-    function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
-    function load(key,def){try{return JSON.parse(localStorage.getItem(key))||def}catch(e){return def}}
+const SUPABASE_URL = '%%SUPABASE_URL%%';  // replace in Netlify _redirects or use env injection in build
+const SUPABASE_ANON = '%%SUPABASE_ANON_KEY%%';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    function initData(){
-      if(!localStorage.getItem(KEY_PRODUCTS)) save(KEY_PRODUCTS, demoProducts);
-      if(!localStorage.getItem(KEY_ORDERS)) save(KEY_ORDERS, []);
-      if(!localStorage.getItem(KEY_MONTH_SALES)) save(KEY_MONTH_SALES, {});
-    }
+const productsEl = document.getElementById('products');
+const searchInput = document.getElementById('searchInput');
+const cartCountEl = document.getElementById('cartCount');
+const cartModal = document.getElementById('cartModal');
+const cartItemsEl = document.getElementById('cartItems');
+const cartTotalEl = document.getElementById('cartTotal');
+const cart = {}; // client-side cart {productId: qty}
+let currentUser = null;
 
-    initData();
-    let dataProducts = load(KEY_PRODUCTS, demoProducts);
-    let orders = load(KEY_ORDERS, []);
-    let monthSales = load(KEY_MONTH_SALES, {}); // { '2025-11': {p1:10, p2:2} }
+async function fetchProducts(q='', category='all'){
+  const url = '/.netlify/functions/get-products?q='+encodeURIComponent(q)+'&cat='+encodeURIComponent(category);
+  const res = await fetch(url);
+  const data = await res.json();
+  return data;
+}
 
-    /* ---------------- Render products ---------------- */
-    const productsEl = document.getElementById('products');
-    const searchInput = document.getElementById('searchInput');
+async function loadProducts(q='', cat='all'){
+  const data = await fetchProducts(q,cat);
+  document.getElementById('resultsInfo').textContent = `${data.length} results`;
+  productsEl.innerHTML='';
+  data.forEach(p=>{
+    const el = document.createElement('div'); el.className='product';
+    el.innerHTML = `
+      <img src="${p.image_url||'placeholder.jpg'}" alt="${p.title}">
+      <h4>${p.title}</h4>
+      <div class="muted">${p.category || '—'}</div>
+      <div style="height:8px"></div>
+      <div style="font-weight:700">₱${Number(p.price).toLocaleString('en-PH')}</div>
+      <div style="height:8px"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn buy" data-id="${p.id}">Add to cart</button>
+        <button class="chip view" data-id="${p.id}">View</button>
+      </div>
+    `;
+    productsEl.appendChild(el);
+  });
+  attachProductHandlers();
+}
 
-    function renderProducts(filterCat='all',q=''){
-      productsEl.innerHTML = '';
-      const qlow = q.trim().toLowerCase();
-      const list = dataProducts.filter(p=>{
-        if(filterCat!=='all' && p.cat!==filterCat) return false;
-        if(qlow && !(p.title.toLowerCase().includes(qlow) || p.desc.toLowerCase().includes(qlow))) return false;
-        return true;
-      });
-      list.forEach(p=>{
-        const el = document.createElement('div');el.className='product card';
-        el.innerHTML = `
-          <div class="image"><img src="${p.img}" alt="${p.title}" style="max-height:200px;object-fit:cover"></div>
-          <div class="body">
-            <h4>${p.title}</h4>
-            <div class="meta">${p.cat} • ID ${p.id}</div>
-            <div style="height:8px"></div>
-            <div class="price">₱${money(p.price)}</div>
-            <div style="height:10px"></div>
-            <div style="display:flex;gap:8px">
-              <button class="btn" data-id="${p.id}" onclick="openModal('${p.id}')">Quick view</button>
-              <button class="chip" onclick="recordQuickSale('${p.id}',1)">Buy 1 (demo)</button>
-            </div>
-          </div>
-        `;
-        productsEl.appendChild(el);
-      })
-    }
+function attachProductHandlers(){
+  document.querySelectorAll('.buy').forEach(b=>{
+    b.addEventListener('click',()=>{ const id=b.dataset.id; cart[id]=(cart[id]||0)+1; updateCartUI(); alert('Added to cart') })
+  });
+  document.querySelectorAll('.view').forEach(b=>{
+    b.addEventListener('click',async ()=>{ const id=b.dataset.id; const res = await fetch('/.netlify/functions/get-product?id='+id); const p = await res.json(); alert(`${p.title}\n\n${p.description}\n\n₱${p.price}`) })
+  });
+}
 
-    // initial render
-    renderProducts();
-
-    // category chips
-    document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',e=>{
-      const cat = ch.dataset.cat;
-      renderProducts(cat, searchInput.value);
-    }))
-
-    // search
-    searchInput.addEventListener('input',e=>renderProducts('all', e.target.value));
-
-    /* ---------------- Modal handling ---------------- */
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalPrice = document.getElementById('modalPrice');
-    const modalDesc = document.getElementById('modalDesc');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalImage = document.getElementById('modalImage');
-    const addToCartBtn = document.getElementById('addToCartBtn');
-
-    let currentModalProduct = null;
-    function openModal(id){
-      const p = dataProducts.find(x=>x.id===id);
+function updateCartUI(){
+  const keys = Object.keys(cart);
+  let total=0,count=0;
+  cartItemsEl.innerHTML='';
+  keys.forEach(id=>{
+    // fetch product details synchronously from DOM or call product endpoint; we'll call server for price
+  });
+  // For brevity, we'll fetch product list and compute total
+  fetch('/.netlify/functions/get-products').then(r=>r.json()).then(all=>{
+    cartItemsEl.innerHTML='';
+    let t=0,c=0;
+    Object.keys(cart).forEach(pid=>{
+      const p = all.find(x=>x.id===pid);
       if(!p) return;
-      currentModalProduct = p;
-      modalTitle.textContent = p.title;
-      modalPrice.textContent = '₱' + money(p.price);
-      modalDesc.textContent = p.desc;
-      modalCategory.textContent = p.cat;
-      modalImage.innerHTML = `<img src="${p.img}" alt="${p.title}" style="max-height:320px;object-fit:cover">`;
-      modalBackdrop.style.display = 'flex';
-    }
-    modalBackdrop.addEventListener('click',e=>{ if(e.target===modalBackdrop) modalBackdrop.style.display='none'})
+      const qty = cart[pid];
+      t += Number(p.price)*qty; c += qty;
+      const div = document.createElement('div');
+      div.style.display='flex'; div.style.justifyContent='space-between'; div.style.marginBottom='6px';
+      div.innerHTML = `<div>${p.title} • x ${qty}</div><div>₱${(p.price*qty).toLocaleString('en-PH')}</div>`;
+      cartItemsEl.appendChild(div);
+    });
+    cartCountEl.textContent = c;
+    cartTotalEl.textContent = t.toLocaleString('en-PH');
+  });
+}
 
-    /* ---------------- Cart logic ---------------- */
-    let cart = load('fq_cart_demo_v1', {}); // {p1:{qty:2}}
-    const cartCount = document.getElementById('cartCount');
-    const cartDrawer = document.getElementById('cartDrawer');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const cartSummary = document.getElementById('cartSummary');
+document.getElementById('openCartBtn').addEventListener('click',()=>{
+  cartModal.classList.toggle('hidden');
+  updateCartUI();
+});
 
-    function saveCart(){localStorage.setItem('fq_cart_demo_v1', JSON.stringify(cart)); updateCartUI();}
-    function updateCartUI(){
-      const keys = Object.keys(cart);
-      let total = 0; let count=0;
-      cartItems.innerHTML='';
-      keys.forEach(id=>{
-        const p = dataProducts.find(x=>x.id===id);
-        const qty = cart[id].qty;
-        const el = document.createElement('div');el.className='cart-item';
-        el.innerHTML = `<div style="width:56px;height:56px;overflow:hidden;border-radius:10px"><img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
-          <div style="flex:1"><div style="font-weight:600">${p.title}</div><div class="muted">₱${money(p.price)} • x ${qty}</div></div>
-          <div><button class="chip" onclick="changeQty('${id}',-1)">-</button><button class="chip" onclick="changeQty('${id}',1)">+</button></div>`;
-        cartItems.appendChild(el);
-        total += p.price * qty; count += qty;
-      })
-      cartCount.textContent = count;
-      cartTotalEl.textContent = money(total);
-      cartSummary.innerHTML = keys.length ? `${count} items • ₱${money(total)}` : 'No items yet.';
-    }
-
-    function changeQty(id,delta){
-      if(!cart[id]) return;
-      cart[id].qty += delta;
-      if(cart[id].qty<=0) delete cart[id];
-      saveCart();
-    }
-
-    addToCartBtn.addEventListener('click',()=>{
-      const qty = Number(document.getElementById('qty').value) || 1;
-      addCart(currentModalProduct.id, qty);
-      modalBackdrop.style.display='none';
+document.getElementById('checkoutBtn').addEventListener('click',()=>{
+  if(Object.keys(cart).length===0){alert('Cart empty'); return;}
+  // open checkout modal and populate items
+  const itemsDiv = document.getElementById('checkoutItems');
+  itemsDiv.innerHTML = '';
+  fetch('/.netlify/functions/get-products').then(r=>r.json()).then(all=>{
+    let t=0;
+    Object.keys(cart).forEach(pid=>{
+      const p = all.find(x=>x.id===pid);
+      const qty=cart[pid];
+      t += Number(p.price)*qty;
+      itemsDiv.innerHTML += `<div style="display:flex;justify-content:space-between">${p.title} x ${qty} <strong>₱${(p.price*qty).toLocaleString('en-PH')}</strong></div>`;
     })
+    document.getElementById('checkoutAddress').value = currentUser ? (currentUser.address||'') : '';
+    document.getElementById('checkoutPhone').value = currentUser ? (currentUser.phone||'') : '';
+    document.getElementById('checkoutModal').classList.remove('hidden');
+  });
+});
 
-    function addCart(id,qty=1){
-      cart[id] = cart[id] || {qty:0};
-      cart[id].qty += qty;
-      saveCart();
-      // small toast
-      alert('Added to cart');
-    }
+document.getElementById('cancelCheckout').addEventListener('click',()=>document.getElementById('checkoutModal').classList.add('hidden'));
 
-    window.openCart = function(){cartDrawer.style.display = cartDrawer.style.display === 'none' ? 'block' : 'none'}
-    document.getElementById('openCartBtn').addEventListener('click', openCart);
+document.getElementById('confirmCheckout').addEventListener('click', async ()=>{
+  const addr = document.getElementById('checkoutAddress').value.trim();
+  const phone = document.getElementById('checkoutPhone').value.trim();
+  const pm = document.getElementById('paymentMethod').value;
+  if(!addr || !phone){ alert('Fill address & phone'); return; }
+  // create order
+  const payload = {items: Object.keys(cart).map(id=>({product_id:id, qty:cart[id]})), shipping_address: addr, phone, payment_method: pm};
+  const res = await fetch('/.netlify/functions/create-order', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  const data = await res.json();
+  if(data.error){ alert('Error: '+data.error); return; }
+  // If payment method is stripe or paypal we should redirect to checkout link returned by server
+  if(data.checkout_url){ window.location = data.checkout_url; return; }
+  // else success (cod/gcash simulated)
+  alert('Order created: ' + data.order_id);
+  // clear cart
+  Object.keys(cart).forEach(k=>delete cart[k]);
+  updateCartUI();
+  document.getElementById('checkoutModal').classList.add('hidden');
+  loadUserOrders();
+});
 
-    // quick buy used in product card
-    window.recordQuickSale = function(id,q){
-      // record a simulated order in current month
-      const today = new Date();
-      const monthKey = today.toISOString().slice(0,7);
-      monthSales[monthKey] = monthSales[monthKey] || {};
-      monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + q;
-      orders.push({id:uid(6),productId:id,qty:q,month:monthKey,created:new Date().toISOString()});
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      alert('Demo purchase recorded for ' + monthKey);
-    }
 
-    // buy now -> converts cart to order (demo)
-    document.getElementById('buyNow').addEventListener('click',()=>{
-      const keys = Object.keys(cart); if(!keys.length){alert('Cart empty');return}
-      const today = new Date(); const monthKey = today.toISOString().slice(0,7);
-      // add to monthSales
-      keys.forEach(id=>{
-        monthSales[monthKey] = monthSales[monthKey] || {};
-        monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + cart[id].qty;
-        orders.push({id:uid(6),productId:id,qty:cart[id].qty,month:monthKey,created:new Date().toISOString()});
-      })
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      cart = {}; saveCart(); cartDrawer.style.display='none';
-      alert('Thank you! Demo order placed for ' + monthKey);
-    })
+// ---------------- Auth (Supabase) ----------------
+function renderAuthArea(){
+  const t = document.getElementById('authArea');
+  if(currentUser){
+    t.innerHTML = `<span style="font-weight:700">${currentUser.full_name||currentUser.email}</span> <button class="chip" id="logoutBtn">Logout</button>`;
+    document.getElementById('logoutBtn').addEventListener('click', async ()=>{
+      await supabase.auth.signOut(); currentUser=null; renderAuthArea(); loadUserOrders();
+    });
+  } else {
+    t.innerHTML = `<button class="chip" id="openAuth">Login / Register</button>`;
+    document.getElementById('openAuth').addEventListener('click',()=>document.getElementById('authModal').classList.remove('hidden'));
+  }
+}
 
-    // checkout button in aside opens cart
-    document.getElementById('checkoutBtn').addEventListener('click',()=>{openCart(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})})
+document.getElementById('doRegister').addEventListener('click', async ()=>{
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const phone = document.getElementById('regPhone').value;
+  const address = document.getElementById('regAddress').value;
+  if(!email || !pass || !name){ alert('Fill name, email and password'); return;}
+  const { user, error } = await supabase.auth.signUp({ email, password: pass }, {data:{full_name:name}});
+  if(error){ alert(error.message); return; }
+  // after signup, create profile row via server or handle via supabase auth trigger; for starter we store profile via function
+  await fetch('/.netlify/functions/create-profile', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:user.id, full_name:name, phone, address})});
+  alert('Check your email for confirmation. You may sign in now.');
+  document.getElementById('authModal').classList.add('hidden');
+});
 
-    // init cart UI
-    updateCartUI();
+document.getElementById('doLogin').addEventListener('click', async ()=>{
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const { user, error } = await supabase.auth.signIn({ email, password: pass });
+  if(error){ alert(error.message); return; }
+  const { data:profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  currentUser = profile || {id:user.id, full_name:user.email, email:user.email};
+  renderAuthArea();
+  document.getElementById('authModal').classList.add('hidden');
+  loadUserOrders();
+});
 
-    /* ---------------- Admin UI ---------------- */
-    const adminModal = document.getElementById('adminModal');
-    const openAdmin = document.getElementById('openAdmin');
-    const adminProduct = document.getElementById('adminProduct');
-    const recordSaleBtn = document.getElementById('recordSale');
-    const adminOrders = document.getElementById('adminOrders');
+// auto session restore
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if(session && session.user){
+    const { data:profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+    currentUser = profile || {id: session.user.id, email: session.user.email};
+  } else currentUser = null;
+  renderAuthArea();
+});
 
-    function refreshAdminProducts(){
-      adminProduct.innerHTML = '';
-      dataProducts.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=`${p.title} (₱${money(p.price)})`;adminProduct.appendChild(o)})
-    }
-    refreshAdminProducts();
+async function loadUserOrders(){
+  const el = document.getElementById('userOrdersSection');
+  if(!currentUser){ el.innerHTML = `<div class="card"><h4>Order History</h4><div class="muted">Login to view your orders.</div></div>`; return; }
+  const res = await fetch('/.netlify/functions/get-orders?user_id=' + currentUser.id);
+  const json = await res.json();
+  el.innerHTML = `<div class="card"><h4>Order History (${json.length})</h4>` + (json.length ? json.map(o=>`<div style="padding:8px;border:1px solid #f3e3e8;border-radius:8px;margin-bottom:8px"><strong>Order ${o.id}</strong><div class="muted">Status: ${o.status} • ${o.created_at.split('T')[0]}</div></div>`).join('') : `<div class="muted">No orders yet.</div>`) + `</div>`;
+}
 
-    openAdmin.addEventListener('click',()=>{adminModal.style.display='flex'; renderAdminOrders(); document.getElementById('adminMonth').value = new Date().toISOString().slice(0,7)})
-    adminModal.addEventListener('click',e=>{ if(e.target===adminModal) adminModal.style.display='none'})
+// admin area (simple prompt for admin password that triggers admin panel)
+document.getElementById('openAdminBtn').addEventListener('click', async ()=>{
+  // In production use supabase admin flag; here simple flow to show admin panel
+  const key = prompt('Enter admin secret (set in Netlify environment)'); if(!key) return;
+  const res = await fetch('/.netlify/functions/admin-auth?key='+encodeURIComponent(key));
+  const j = await res.json();
+  if(j.ok){ openAdminPanel(); } else alert('Invalid admin key');
+});
 
-    recordSaleBtn.addEventListener('click',()=>{
-      const id = adminProduct.value; const qty = Number(document.getElementById('adminQty').value)||1; const month = document.getElementById('adminMonth').value;
-      if(!month){alert('Pick month');return}
-      monthSales[month] = monthSales[month] || {};
-      monthSales[month][id] = (monthSales[month][id]||0) + qty;
-      orders.push({id:uid(6),productId:id,qty:qty,month:month,created:new Date().toISOString()});
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      renderAdminOrders(); alert('Recorded');
-    })
+function openAdminPanel(){
+  const win = window.open('', '_blank');
+  win.document.write('<h2>Admin Panel</h2><div id="content">Loading...</div><script>fetch("/.netlify/functions/get-orders").then(r=>r.json()).then(j=>{document.getElementById("content").innerHTML = "<pre>"+JSON.stringify(j,null,2)+"</pre>"});<\/script>');
+}
 
-    function renderAdminOrders(){
-      adminOrders.innerHTML = '';
-      const recent = orders.slice(-10).reverse();
-      recent.forEach(o=>{
-        const p = dataProducts.find(x=>x.id===o.productId)||{title:o.productId};
-        const d = document.createElement('div'); d.className='muted'; d.style.padding='6px 0'; d.textContent = `${o.created.split('T')[0]} — ${p.title} x ${o.qty} (${o.month})`;
-        adminOrders.appendChild(d);
-      })
-    }
+// search + categories
+searchInput.addEventListener('input', e => loadProducts(e.target.value, 'all'));
+document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click', ()=> loadProducts('', b.dataset.cat)));
 
-    document.getElementById('resetData').addEventListener('click',()=>{
-      if(confirm('Reset demo data? This clears orders and sales counts, but not products.')){
-        orders=[]; monthSales={}; save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); renderAdminOrders(); alert('Reset');
-      }
-    })
+loadProducts(); renderAuthArea(); updateCartUI(); loadUserOrders();
 
-    document.getElementById('exportData').addEventListener('click',()=>{
-      const blob = new Blob([JSON.stringify({products:dataProducts,orders:orders,monthSales:monthSales},null,2)],{type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download='five-queens-data.json'; a.click(); URL.revokeObjectURL(url);
-    })
-
-    /* ---------------- Reporting (best seller per month) ---------------- */
-    const reportModal = document.getElementById('reportModal');
-    const openReport = document.getElementById('openReport');
-    const reportMonth = document.getElementById('reportMonth');
-    const reportContent = document.getElementById('reportContent');
-
-    openReport.addEventListener('click',()=>{reportModal.style.display='flex'; reportMonth.value = new Date().toISOString().slice(0,7); renderReport();})
-    reportModal.addEventListener('click',e=>{ if(e.target===reportModal) reportModal.style.display='none'})
-
-    reportMonth.addEventListener('change',renderReport);
-
-    function renderReport(){
-      const m = reportMonth.value || new Date().toISOString().slice(0,7);
-      const sales = monthSales[m] || {};
-      if(!Object.keys(sales||{}).length){reportContent.innerHTML = `<div class="muted">No sales recorded for ${m}.</div>`; return}
-      // compute top products
-      const arr = Object.entries(sales).map(([pid,c])=>({pid,count:c}));
-      arr.sort((a,b)=>b.count - a.count);
-      const top = arr[0];
-      const ptop = dataProducts.find(x=>x.id===top.pid);
-      let html = `<div style="display:flex;gap:12px;align-items:center"><div style="width:120px;height:120px;border-radius:12px;overflow:hidden"><img src="${ptop.img}" style="width:100%;height:100%;object-fit:cover"/></div><div><h3>${ptop.title}</h3><div class="muted">Sold ${top.count} pcs in ${m}</div><div style="height:8px"></div><div class="muted">Category: ${ptop.cat}</div></div></div>`;
-      // also show top 5
-      html += `<div style="margin-top:12px"><h4>Top sellers</h4><ol>` + arr.slice(0,5).map(a=>{const p=dataProducts.find(x=>x.id===a.pid); return `<li>${p.title} — ${a.count} pcs`}).join('') + `</ol></div>`;
-      reportContent.innerHTML = html;
-    }
-
-    /* ---------------- Small fixes & load persisted data ---------------- */
-    // load persisted monthSales and orders from localStorage (already assigned above)
-    function loadEverything(){
-      dataProducts = load(KEY_PRODUCTS, demoProducts);
-      orders = load(KEY_ORDERS, []);
-      monthSales = load(KEY_MONTH_SALES, {});
-      refreshAdminProducts(); renderProducts(); updateCartUI();
-    }
-    loadEverything();
-
-    // fix accidental stray character in demoProducts earlier: if any product id missing remove
-    dataProducts = dataProducts.filter(p=>p && p.id);
-    save(KEY_PRODUCTS, dataProducts);
-
-    /* ---------------- On first open show short tip ---------------- */
-    if(!localStorage.getItem('fq_seen_tip')){
-      localStorage.setItem('fq_seen_tip','1');
-      setTimeout(()=>alert('Tip: Use Admin → Record Sales to simulate orders per month. Then use Monthly Best to view that month\'s best seller.'),600);
-    }
-
-  </script>
+</script>
 </body>
 </html>
