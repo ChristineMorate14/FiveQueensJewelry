@@ -117,28 +117,22 @@
   </div>
 
   <!-- Checkout modal -->
-  <div id="checkoutModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center">
-    <div style="width:720px;background:white;border-radius:12px;padding:18px">
-      <h4>Checkout</h4>
-      <div id="checkoutItems"></div>
-      <div style="height:8px"></div>
-      <label>Shipping address</label>
-      <textarea id="checkoutAddress" rows="2"></textarea>
-      <label>Phone</label>
-      <input id="checkoutPhone" />
-      <label>Payment method</label>
-      <select id="paymentMethod">
-        <option value="cod">Cash on Delivery</option>
-        <option value="gcash">GCash (manual)</option>
-        <option value="stripe">Credit Card (Stripe)</option>
-        <option value="paypal">PayPal</option>
-      </select>
-      <div style="height:12px;display:flex;gap:8px;justify-content:flex-end">
-        <button class="chip" id="cancelCheckout">Cancel</button>
-        <button class="btn" id="confirmCheckout">Confirm & Pay</button>
-      </div>
-    </div>
-  </div>
+  <div class="fields">
+  <label>Shipping address</label>
+  <textarea id="checkoutAddress" rows="2"></textarea>
+
+  <label>Phone</label>
+  <input id="checkoutPhone" />
+
+  <label>Payment method</label>
+  <select id="paymentMethod">
+    <option value="cod">Cash on Delivery</option>
+    <option value="gcash">GCash (manual)</option>
+    <option value="stripe">Credit Card (Stripe)</option>
+    <option value="paypal">PayPal</option>
+  </select>
+</div>
+
 
 <script type="module">
 /*
